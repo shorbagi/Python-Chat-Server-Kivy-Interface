@@ -1,0 +1,225 @@
+#:import RiseInTransition kivy.uix.screenmanager.RiseInTransition
+#:import KivyLexer kivy.extras.highlight.KivyLexer
+#:import Factory kivy.factory.Factory
+#:import hex kivy.utils.get_color_from_hex
+
+<BoxLayout>:
+    padding: 3
+    spacing: 3
+
+<Label>:
+    font_size: app.first_size
+
+<Button>:
+    font_size: app.first_size
+    height: 50
+    size_hint: (1, None)
+    border: (1, 1, 1, 1)
+
+<TextInput>:
+    font_size: 20
+    multiline: False
+    focus: True
+
+<ScrollView>:
+    canvas.before:
+        Color:
+            rgb: 1, 1, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+<ChatLabel@Label>:
+    color: hex('#101010')
+    # text_size: (self.width, None)
+    halign: 'left'
+    valign: 'top'
+    size_hint: (1, None)
+    height: self.texture_size[1]
+    markup: True
+
+<MyOwnActionBar@ActionBar>:
+    pos_hint: {'top':1}
+    halign: 'left'
+    valign: 'center'
+    background_color: [0, 25, 51, .1]
+    ActionView:
+        ActionPrevious:
+            title: 'Python Chat Server'
+            with_previous: False
+            app_icon:"mediu.png"
+            padding: '-7sp'
+            important: True
+
+        ActionButton:
+            text: 'Settings'
+            on_release: app.open_settings()
+        ActionButton:
+            text: 'About'
+            on_press: app.show_popup()
+        ActionButton:
+            text: 'Disconnect'
+            on_press: app.disconnect()
+
+<AboutPopup>:
+    auto_dismiss: True
+    title: 'Python Chat Server Project'
+    size_hint: (.5, .5)
+    GridLayout:
+        rows: 2
+        cols: 1
+        Label:
+            halign: 'center'
+            valign: 'middle'
+            font_size: 15
+            text: 'Al-Madinah International University\nFinal Year Project Semester: Apr 2018\nPython Chat Server Using Sockets\nInstructor: Assoc. Prof. Dr. Shadi M.S. Hilles\nInstructor: Assoc. Prof. Dr. Yousef Abu Baker El-Ebiary\nStudent: Mohamed Shorbagi\nMetric No: BSD143BI494\n'
+        Button:
+            height: 30
+            text: 'Dismiss'
+            on_press: root.dismiss()
+            background_normal: 'button_normal.png'
+            background_down: 'button_down.png'
+
+
+ScreenManager:
+    transition: RiseInTransition()
+
+    Screen:
+        name: 'login'
+        BoxLayout:
+            orientation: 'vertical'
+            canvas.before:
+                Color:
+                    rgba: hex('#31698a')
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+            GridLayout:
+                size_hint: 1, .2
+                rows: 4
+                cols: 2
+                Label:
+                    text: 'Server:'
+                TextInput:
+                    id: server
+                    text: '127.0.0.1'
+                Label:
+                    text: 'Nickname:'
+                TextInput:
+                    id: nickname
+                    text: 'Shorbagi'
+            BoxLayout:
+                orientation: 'vertical'
+                size_hint: 1, .8
+                Image:
+                    size_hint: 1, .45
+                    source: 'mediu.png'
+                    halign: 'center'
+                    valign: 'middle'
+
+                Label:
+                    size_hint: 1, .55
+                    text: 'Al-Madinah International University\nFinal Year Project Semester: Apr 2018\nPython Chat Server Using Sockets\nInstructor: Assoc. Prof. Dr. Shadi M.S. Hilles\nInstructor: Assoc. Prof. Dr. Yousef Abu Baker El-Ebiary\nStudent: Mohamed Shorbagi\nMetric No: BSD143BI494\n'
+                    halign: 'center'
+                    valign: 'middle'
+                    font_size: 25
+
+
+            Button:
+                text: 'Connect'
+                on_press: app.connect()
+                background_normal: 'button_normal.png'
+                background_down: 'button_down.png'
+
+    Screen:
+        name: 'chatroom'
+
+        BoxLayout:
+            orientation: 'vertical'
+            canvas.before:
+                Color:
+                    rgba: hex('#31698a')
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+            MyOwnActionBar:
+                size_hint: (1, 0.1)
+
+            BoxLayout:
+                spacing: 1
+                padding: 0
+                ScrollView:
+                    size_hint: (0.8, 1)
+                    ChatLabel:
+                        font_name: 'FreeFarsi'
+                        id: chat_logs
+                        text: ''
+
+                BoxLayout:
+                    orientation: 'vertical'
+                    size_hint: (0.2, 1)
+                    padding: 0
+                    spacing: 1
+                    ScrollView:
+                        canvas.before:
+                            Color:
+                                rgba: hex('#A5A5BB')
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size
+                        BoxLayout:
+                            orientation: 'vertical'
+                            Label:
+                                size_hint: (1, .1)
+                                halign: 'center'
+                                text: 'Clients'
+                            ChatLabel:
+                                font_name: 'FreeFarsi'
+                                size_hint: (1, .9)
+                                color: hex('#35602a')
+                                halign: 'center'
+                                id: chat_clients
+                                text: ''
+
+                    ScrollView:
+                        canvas.before:
+                            Color:
+                                rgba: hex('#A5A5BB')
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size
+                        BoxLayout:
+                            orientation: 'vertical'
+                            Label:
+                                size_hint: (1, .1)
+                                halign: 'center'
+                                text: 'Rooms Available'
+                            ChatLabel:
+                                font_name: 'FreeFarsi'
+                                size_hint: (1, .9)
+                                color: hex('#35602a')
+                                halign: 'center'
+                                id: chat_rooms
+                                text: ''
+
+            BoxLayout:
+                height: 50
+                orientation: 'horizontal'
+                padding: 0
+                size_hint: (1, None)
+
+                TextInput:
+                    focus: True
+                    id: message
+                    font_name: 'FreeFarsi'
+                    on_text_validate: app.send_msg()
+                    size_hint: (0.8, 1)
+
+                Button:
+                    text: 'Send'
+                    on_press: app.send_msg()
+                    size_hint: (0.2, 1)
+                    background_normal: 'button_normal.png'
+                    background_down: 'button_down.png'
